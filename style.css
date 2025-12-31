@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  /* Warm, cookie-themed palette */
+  --background: 30 25% 98%;      /* Soft cream background */
+  --foreground: 25 10% 20%;      /* Dark brownish-gray for text */
+  
+  --primary: 25 50% 45%;         /* Rich chocolate/cookie brown */
+  --primary-foreground: 30 25% 98%;
+  
+  --secondary: 35 40% 92%;       /* Lighter biscuit color */
+  --secondary-foreground: 25 50% 45%;
+  
+  --muted: 35 30% 94%;
+  --muted-foreground: 25 10% 45%;
+  
+  --accent: 35 60% 85%;          /* Highlight color */
+  --accent-foreground: 25 50% 45%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  
+  --border: 30 20% 90%;
+  --input: 30 20% 90%;
+  --ring: 25 50% 45%;
+  
+  --radius: 0.75rem;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-primary/20;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    @apply font-bold tracking-tight text-primary;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
