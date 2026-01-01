@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sunday Dough – Order</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+select, input, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+.counter {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.counter button {
+  width: 40px;
+  font-size: 18px;
+}
+
+.hidden {
+  display: none;
+}
+
+.total {
+  font-size: 1.5em;
+  margin-top: 20px;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🍪 Sunday Dough – Order Form</h1>
+
+<form action="https://formspree.io/f/xykzkyvr" method="POST">
+
+<!-- STYLE -->
+<label>Choose style</label>
+<select name="style" required>
+  <option value="">Select</option>
+  <option>Cookies</option>
+  <option>Cookie Fries</option>
+</select>
+
+<!-- FLAVOUR -->
+<label>Choose flavour</label>
+<select name="flavour" required>
+  <option value="">Select</option>
+  <option>Classic Milk Chocolate</option>
+</select>
+
+<!-- PACK SIZE -->
+<label>Choose portion size</label>
+<select id="pack" name="portion" required>
+  <option value="">Select</option>
+  <option data-price="2.5">2 cookies – £2.50</option>
+  <option data-price="5">4 cookies – £5.00</option>
+  <option data-price="7.5">6 cookies – £7.50</option>
+  <option data-price="10">8 cookies – £10.00</option>
+  <option data-price="12.5">10 cookies – £12.50</option>
+</select>
+
+<!-- QUANTITY -->
+<label>How many portions?</label>
+<div class="counter">
+  <button type="button" onclick="changeQty(-1)">−</button>
+  <input type="number" id="qty" name="quantity" value="1" readonly>
+  <button type="button" onclick="changeQty(1)">+</button>
+</div>
+
+<!-- DELIVERY -->
+<label>Delivery or pickup</label>
+<select id="delivery" name="delivery_method" required>
+  <option value="">Choose</option>
+  <option value="pickup">Pickup</option>
+  <option value="delivery">Delivery (+£2)</option>
+</select>
+
+<!-- PICKUP ADDRESS -->
+<div id="pickupBox" class="hidden">
+  <label>Pickup address</label>
+  <input type="text" value="29 Bramham Gardens" readonly>
+</div>
+
+<!-- DELIVERY DETAILS -->
+<div id="deliveryBox" class="hidden">
+  <label>Delivery address</label>
+  <input type="text" name="delivery_address">
+
+  <label>Phone number</label>
+  <input type="tel" name="phone">
+</div>
+
+<!-- ALLERGEN CONFIRMATION -->
+<label>
+  <input type="checkbox" required>
+  I understand this product contains wheat (gluten) and soy and may contain milk, eggs, and nuts.
+</label>
+
+<!-- TOTAL -->
+<div class="total">
+  Total: £<span id="total">0.00</span>
+</div>
+
+<input type="hidden" name="total_price" id="totalInput">
+
+<button type="submit">Submit Order</button>
+
+</form>
+
+<script>
+let qty = 1;
+
+function changeQty(n) {
+  qty = Math.max(1, qty + n);
+  document.getElementById("qty").value = qty;
+  calculateTotal();
+}
+
+function calculateTotal() {
+  const pack = document.getElementById("pack");
+  const option = pack.options[pack.selectedIndex];
+  if (!option || !option.dataset.price) return;
+
+  let price = parseFloat(option.dataset.price);
+  let total = price * qty;
+
+  if (document.getElementById("delivery").value === "delivery") {
+    total += 2;
+  }
+
+  document.getElementById("total").textContent = total.toFixed(2);
+  document.getElementById("totalInput").value = "£" + total.toFixed(2);
+}
+
+document.getElementById("pack").addEventListener("change", calculateTotal);
+
+document.getElementById("delivery").addEventListener("change", function () {
+  document.getElementById("pickupBox").classList.add("hidden");
+  document.getElementById("deliveryBox").classList.add("hidden");
+
+  if (this.value === "pickup") {
+    document.getElementById("pickupBox").classList.remove("hidden");
+  }
+
+  if (this.value === "delivery") {
+    document.getElementById("deliveryBox").classList.remove("hidden");
+  }
+
+  calculateTotal();
+});
+</script>
+
+</body>
+</html>
