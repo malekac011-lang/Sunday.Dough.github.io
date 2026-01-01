@@ -1,82 +1,154 @@
-<ame="delivery_method" required>
-  <option value="">Choose</option>
-  <option value="pickup">Pickup</option>
-  <option value="delivery">Delivery (+£2)</option>
-</select>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sunday Dough – Order</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+    select, input, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    .qty-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 5px;
+    }
+    .qty-box button {
+      width: 40px;
+      font-size: 18px;
+    }
+    .total {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
 
-<!-- PICKUP ADDRESS -->
-<div id="pickupBox" class="hidden">
-  <label>Pickup address</label>
-  <input type="text" value="29 Bramham Gardens" readonly>
-</div>
+<body>
 
-<!-- DELIVERY DETAILS -->
-<div id="deliveryBox" class="hidden">
-  <label>Delivery address</label>
-  <input type="text" name="delivery_address">
+<h1>🍪 Sunday Dough Order Form</h1>
 
-  <label>Phone number</label>
-  <input type="tel" name="phone">
-</div>
+<form action="https://formspree.io/f/xykzkyvr" method="POST">
 
-<!-- ALLERGEN CONFIRMATION -->
-<label>
-  <input type="checkbox" required>
-  I understand this product contains wheat (gluten) and soy and may contain milk, eggs, and nuts.
-</label>
+  <!-- FLAVOUR -->
+  <label>Cookie flavour</label>
+  <select name="Flavour" required>
+    <option value="">Select a flavour</option>
+    <option>Classic Milk Chocolate Cookie</option>
+    <option>Classic Chocolate Chunk Cookie</option>
+    <option>Dark Chocolate Cookie</option>
+    <option>Kinder Cookie</option>
+    <option>Oreo Cookie</option>
+    <option>Lotus Biscoff Cookie</option>
+  </select>
 
-<!-- TOTAL -->
-<div class="total">
-  Total: £<span id="total">0.00</span>
-</div>
+  <!-- SIZE -->
+  <label>Box size</label>
+  <select id="size" required>
+    <option value="">Select quantity</option>
+    <option data-price="2.5">2 cookies – £2.50</option>
+    <option data-price="5">4 cookies – £5.00</option>
+    <option data-price="7.5">6 cookies – £7.50</option>
+    <option data-price="10">8 cookies – £10.00</option>
+    <option data-price="12.5">10 cookies – £12.50</option>
+  </select>
 
-<input type="hidden" name="total_price" id="totalInput">
+  <!-- MULTIPLIER -->
+  <label>Number of boxes</label>
+  <div class="qty-box">
+    <button type="button" onclick="changeQty(-1)">−</button>
+    <input type="number" id="qty" value="1" readonly>
+    <button type="button" onclick="changeQty(1)">+</button>
+  </div>
 
-<button type="submit">Submit Order</button>
+  <!-- DELIVERY -->
+  <label>Delivery or pickup</label>
+  <select id="delivery" name="Delivery option" required onchange="toggleAddress()">
+    <option value="">Choose option</option>
+    <option value="Pickup">Pickup</option>
+    <option value="Delivery">Delivery (+£2)</option>
+  </select>
+
+  <!-- PICKUP -->
+  <div id="pickup" class="hidden">
+    <p><strong>Pickup address:</strong><br>29 Bramham Gardens</p>
+  </div>
+
+  <!-- DELIVERY -->
+  <div id="deliveryBox" class="hidden">
+    <label>Delivery address</label>
+    <input type="text" name="Delivery address">
+    <label>Phone number</label>
+    <input type="tel" name="Phone number">
+  </div>
+
+  <!-- INGREDIENT CHECK -->
+  <label>
+    <input type="checkbox" name="Ingredient confirmation" required>
+    I confirm that I have read and understand the ingredient & allergen information.
+  </label>
+
+  <!-- TOTAL -->
+  <div class="total">
+    Total: £<span id="total">0.00</span>
+  </div>
+
+  <input type="hidden" name="Total price" id="totalInput">
+
+  <button type="submit">Submit Order</button>
 
 </form>
 
 <script>
-let qty = 1;
+  const size = document.getElementById("size");
+  const qty = document.getElementById("qty");
+  const total = document.getElementById("total");
+  const totalInput = document.getElementById("totalInput");
+  const delivery = document.getElementById("delivery");
 
-function changeQty(n) {
-  qty = Math.max(1, qty + n);
-  document.getElementById("qty").value = qty;
-  calculateTotal();
-}
+  size.addEventListener("change", updatePrice);
+  delivery.addEventListener("change", updatePrice);
 
-function calculateTotal() {
-  const pack = document.getElementById("pack");
-  const option = pack.options[pack.selectedIndex];
-  if (!option || !option.dataset.price) return;
-
-  let price = parseFloat(option.dataset.price);
-  let total = price * qty;
-
-  if (document.getElementById("delivery").value === "delivery") {
-    total += 2;
+  function changeQty(n) {
+    qty.value = Math.max(1, Number(qty.value) + n);
+    updatePrice();
   }
 
-  document.getElementById("total").textContent = total.toFixed(2);
-  document.getElementById("totalInput").value = "£" + total.toFixed(2);
-}
-
-document.getElementById("pack").addEventListener("change", calculateTotal);
-
-document.getElementById("delivery").addEventListener("change", function () {
-  document.getElementById("pickupBox").classList.add("hidden");
-  document.getElementById("deliveryBox").classList.add("hidden");
-
-  if (this.value === "pickup") {
-    document.getElementById("pickupBox").classList.remove("hidden");
+  function updatePrice() {
+    let price = size.selectedOptions[0]?.dataset.price || 0;
+    let sum = price * qty.value;
+    if (delivery.value === "Delivery") sum += 2;
+    total.textContent = sum.toFixed(2);
+    totalInput.value = "£" + sum.toFixed(2);
   }
 
-  if (this.value === "delivery") {
-    document.getElementById("deliveryBox").classList.remove("hidden");
+  function toggleAddress() {
+    document.getElementById("pickup").classList.toggle("hidden", delivery.value !== "Pickup");
+    document.getElementById("deliveryBox").classList.toggle("hidden", delivery.value !== "Delivery");
+    updatePrice();
   }
-
-  calculateTotal();
-});
 </script>
 
 </body>
