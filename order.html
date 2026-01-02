@@ -1,174 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Sunday Dough – Order</title>
-
-<style>
-body {
-  font-family: Arial, sans-serif;
-  max-width: 700px;
-  margin: auto;
-  padding: 20px;
-}
-h1, h2 {
-  text-align: center;
-}
-.flavour {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin: 10px 0;
-}
-.qty-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.qty-box button {
-  width: 35px;
-  font-size: 18px;
-}
-.hidden {
-  display: none;
-}
-.total {
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 20px;
-}
-.notice {
-  background: #f5f5f5;
-  padding: 10px;
-  border-left: 4px solid #333;
-  margin-bottom: 15px;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>Sunday Dough – Order Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #5b2c2c;
+    }
+    .box {
+      background: #ffffff;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      background: #5b2c2c;
+      color: white;
+      padding: 12px;
+      border: none;
+      width: 100%;
+      font-size: 16px;
+      border-radius: 6px;
+    }
+    .small {
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
 </head>
-
 <body>
 
-<h1>🍪 Sunday Dough Pre-Order</h1>
-
-<div class="notice">
-<strong>Pickup & Delivery Rules</strong><br>
-• Mon–Fri: Pickup only (6–10 PM)<br>
-• Saturday: Delivery 2–6 PM / Pickup 6–10 PM<br>
-• Sunday: Pickup only (10 AM–10 PM)
-</div>
+<h1>🍪 Sunday Dough – Pre-Order Form</h1>
 
 <form action="https://formspree.io/f/xykzkyvr" method="POST">
 
-<h2>Order day</h2>
-<select id="day" name="Order day" onchange="updateRules()" required>
-  <option value="">Select day</option>
-  <option>Monday</option>
-  <option>Tuesday</option>
-  <option>Wednesday</option>
-  <option>Thursday</option>
-  <option>Friday</option>
-  <option>Saturday</option>
-  <option>Sunday</option>
-</select>
-
-<h2>Pickup or Delivery</h2>
-<select id="method" name="Method" onchange="updateRules()" required>
-  <option value="">Select option</option>
-</select>
-
-<h2>Time slot</h2>
-<select id="time" name="Time slot" required>
-  <option value="">Select time</option>
-</select>
-
-<h2>Cookie flavours & quantities</h2>
-
-<div class="flavour">
-  <strong>Classic Milk Chocolate</strong>
-  <div class="qty-box">
-    <button type="button" onclick="changeQty('milk',-1)">−</button>
-    <input id="milk" value="0" readonly>
-    <button type="button" onclick="changeQty('milk',1)">+</button>
+  <div class="box">
+    <h2>Product Type</h2>
+    <select name="Product Type" required>
+      <option value="">Select</option>
+      <option>Cookies</option>
+      <option>Cookie Fries</option>
+    </select>
   </div>
-</div>
 
-<div class="flavour">
-  <strong>Lotus Biscoff</strong>
-  <div class="qty-box">
-    <button type="button" onclick="changeQty('lotus',-1)">−</button>
-    <input id="lotus" value="0" readonly>
-    <button type="button" onclick="changeQty('lotus',1)">+</button>
+  <div class="box">
+    <h2>Flavours & Quantities</h2>
+
+    <label>Classic Milk Chocolate Cookie</label>
+    <input type="number" name="Milk Chocolate Qty" min="0" value="0">
+
+    <label>Classic Double Chocolate Chunk Cookie</label>
+    <input type="number" name="Double Chocolate Chunk Qty" min="0" value="0">
+
+    <label>Dark Chocolate Cookie</label>
+    <input type="number" name="Dark Chocolate Qty" min="0" value="0">
+
+    <label>Oreo Cookie</label>
+    <input type="number" name="Oreo Qty" min="0" value="0">
+
+    <label>Kinder Cookie</label>
+    <input type="number" name="Kinder Qty" min="0" value="0">
+
+    <label>Lotus Biscoff Cookie</label>
+    <input type="number" name="Lotus Biscoff Qty" min="0" value="0">
+
+    <p class="small">
+      Pricing: 2 = £2.50 · 4 = £5 · 6 = £7.50 · 8 = £10 · 10 = £12.50
+    </p>
   </div>
-</div>
 
-<h2>Address</h2>
-<p><strong>Pickup address:</strong> 29 Bramham Gardens</p>
+  <div class="box">
+    <h2>Receiving Order Day</h2>
+    <select name="Receiving Day" required>
+      <option value="">Select day</option>
+      <option>Monday</option>
+      <option>Tuesday</option>
+      <option>Wednesday</option>
+      <option>Thursday</option>
+      <option>Friday</option>
+      <option>Saturday</option>
+      <option>Sunday</option>
+    </select>
 
-<input type="text" name="Delivery address" placeholder="Delivery address (Saturday only)">
-<input type="tel" name="Phone number" placeholder="Phone number">
+    <label>Preferred Time</label>
+    <input type="text" name="Preferred Time" placeholder="e.g. 7:30 PM" required>
 
-<label>
-  <input type="checkbox" required>
-  I confirm I have read and understand the ingredient & allergen information.
-</label>
+    <p class="small">
+      Mon–Fri: Pickup only (6–10 PM)<br>
+      Saturday: Delivery 2–6 PM / Pickup 6–10 PM<br>
+      Sunday: Pickup only (10 AM–10 PM)
+    </p>
+  </div>
 
-<div class="total">
-Total cookies: <span id="count">0</span><br>
-Estimated price: £<span id="price">0.00</span>
-</div>
+  <div class="box">
+    <h2>Pickup or Delivery</h2>
+    <select name="Method" required>
+      <option value="">Select</option>
+      <option>Pickup</option>
+      <option>Delivery (+£2)</option>
+    </select>
 
-<input type="hidden" name="Order summary" id="summary">
+    <p><strong>Pickup Address:</strong> 29 Bramham Gardens</p>
+    <p><strong>Phone:</strong> +44 7305 101689</p>
 
-<button type="submit">Submit Order</button>
+    <label>Delivery Address (if delivery)</label>
+    <input type="text" name="Delivery Address">
+
+    <h3>Delivery Areas</h3>
+    <ul>
+      <li>Earl’s Court</li>
+      <li>West Kensington</li>
+      <li>Kensington</li>
+      <li>South Kensington</li>
+      <li>Chelsea (west side)</li>
+      <li>Fulham (north / Fulham Broadway)</li>
+      <li>Barons Court</li>
+      <li>Gloucester Road area</li>
+    </ul>
+
+    <label>
+      <input type="checkbox" name="Delivery Area Confirmed" required>
+      I confirm my delivery address is within the listed delivery areas.
+    </label>
+  </div>
+
+  <div class="box">
+    <label>
+      <input type="checkbox" name="Ingredients Confirmed" required>
+      I confirm I have read and understand the ingredients and allergens.
+    </label>
+  </div>
+
+  <button type="submit">Submit Order</button>
 
 </form>
-
-<script>
-const flavours = ["milk","lotus"];
-
-function changeQty(id, n){
-  const el=document.getElementById(id);
-  el.value=Math.max(0,Number(el.value)+n);
-  updateTotal();
-}
-
-function updateTotal(){
-  let total=0;
-  flavours.forEach(f=>total+=Number(document.getElementById(f).value));
-  document.getElementById("count").textContent=total;
-  let price=(total/2)*2.5;
-  document.getElementById("price").textContent=price.toFixed(2);
-  document.getElementById("summary").value=`Milk:${milk.value}, Lotus:${lotus.value}, Total:${total}`;
-}
-
-function updateRules(){
-  const day=document.getElementById("day").value;
-  const method=document.getElementById("method");
-  const time=document.getElementById("time");
-
-  method.innerHTML='<option value="">Select option</option>';
-  time.innerHTML='<option value="">Select time</option>';
-
-  if(["Monday","Tuesday","Wednesday","Thursday","Friday"].includes(day)){
-    method.innerHTML+='<option>Pickup</option>';
-    addTimes("18:00","22:00");
-  }
-  if(day==="Saturday"){
-    method.innerHTML+='<option>Delivery</option><option>Pickup</option>';
-    addTimes("14:00","18:00");
-    addTimes("18:00","22:00");
-  }
-  if(day==="Sunday"){
-    method.innerHTML+='<option>Pickup</option>';
-    addTimes("10:00","22:00");
-  }
-}
-
-function addTimes(start,end){
-  document.getElementById("time").innerHTML+=
-    `<option>${start} – ${end}</option>`;
-}
-</script>
 
 </body>
 </html>
